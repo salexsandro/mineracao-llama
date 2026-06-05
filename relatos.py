@@ -2,12 +2,13 @@ import os
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from openai import OpenAI
-from tqdm import tqdm  
+from tqdm import tqdm 
+import re 
 
 DIRETORIO_INPUT = "./dados_reddit"
 DIRETORIO_OUTPUT = "./dados_classificados"
-MAX_LINHAS_POR_ARQUIVO = 100
-NUM_CORES_TRABALHADORES = 4
+MAX_LINHAS_POR_ARQUIVO = 9999999
+NUM_CORES_TRABALHADORES = 1
 NOME_MODELO = "phi3"
 
 client = OpenAI(
@@ -32,11 +33,14 @@ def classificar_texto(texto_relato):
                 {"role": "system", "content": PROMPT_SYSTEM},
                 {"role": "user", "content": f"Texto a ser analisado:\n{texto_relato}"}
             ],
-            response_format={"type": "json_object"},
             temperature=0.1
         )
         conteudo = resposta.choices[0].message.content
-        return json.loads(conteudo)
+        # tenta extrair JSON mesmo que venha com texto em volta
+        match = re.search(r'\{.*?\}', conteudo, re.DOTALL)
+        if match:
+            return json.loads(match.group())
+        return {"e_relato": False, "justificativa": "Resposta fora do formato esperado"}
     except Exception as e:
         return {"e_relato": False, "justificativa": f"Erro no processamento: {str(e)}"}
 
@@ -64,26 +68,44 @@ def processar_linha(linha, index, nome_arquivo):
 
 def processar_arquivo_jsonl(caminho_entrada, caminho_saida, nome_arquivo):
     tqdm.write(f"\nIniciando leitura: {nome_arquivo}")
-    
+
+    # carrega IDs já processados
+    ids_processados = set()
+    if os.path.exists(caminho_saida):
+        with open(caminho_saida, 'r', encoding='utf-8') as f:
+            for linha in f:
+                if linha.strip():
+                    try:
+                        dado = json.loads(linha)
+                        if "id" in dado:
+                            ids_processados.add(dado["id"])
+                    except json.JSONDecodeError:
+                        pass
+        tqdm.write(f"[{nome_arquivo}] {len(ids_processados)} posts já processados, pulando...")
+
     linhas_para_processar = []
-    
+
     with open(caminho_entrada, 'r', encoding='utf-8') as infile:
         for index, linha in enumerate(infile):
-            if len(linhas_para_processar) >= MAX_LINHAS_POR_ARQUIVO:
-                break
             if linha.strip():
-                linhas_para_processar.append((linha, index + 1))
+                try:
+                    dado = json.loads(linha)
+                    if dado.get("id") in ids_processados:
+                        continue  # já foi processado, pula
+                    linhas_para_processar.append((linha, index + 1))
+                except json.JSONDecodeError:
+                    pass
 
     total_linhas = len(linhas_para_processar)
     if total_linhas == 0:
-        tqdm.write(f"[AVISO] Arquivo {nome_arquivo} está vazio.")
+        tqdm.write(f"[{nome_arquivo}] Nada novo para processar.")
         return
 
     resultados = [None] * total_linhas
 
     with ThreadPoolExecutor(max_workers=NUM_CORES_TRABALHADORES) as executor:
         futures = {
-            executor.submit(processar_linha, item[0], item[1], nome_arquivo): i 
+            executor.submit(processar_linha, item[0], item[1], nome_arquivo): i
             for i, item in enumerate(linhas_para_processar)
         }
 
@@ -93,11 +115,12 @@ def processar_arquivo_jsonl(caminho_entrada, caminho_saida, nome_arquivo):
             if resultado_dado:
                 resultados[posicao] = resultado_dado
 
-    with open(caminho_saida, 'w', encoding='utf-8') as outfile:
+    # abre em modo append para não apagar o que já estava
+    with open(caminho_saida, 'a', encoding='utf-8') as outfile:
         for res in resultados:
             if res:
                 outfile.write(json.dumps(res, ensure_ascii=False) + "\n")
-                
+
     tqdm.write(f"Concluído: {nome_arquivo} salvo com sucesso.\n")
 
 def pipeline_principal():
