@@ -1,0 +1,628 @@
+{
+  "config": {
+    "embedding_model": "all-MiniLM-L6-v2",
+    "umap_n_components": 10,
+    "umap_n_neighbors": 15,
+    "optimal_k": 13,
+    "best_k_elbow": 3,
+    "best_k_silhouette": 13
+  },
+  "evaluation": {
+    "silhouette_score": 0.3853,
+    "betacv": 0.2357,
+    "mean_coherence_cv": 0.4077
+  },
+  "topics": [
+    {
+      "topic_id": 0,
+      "size": 161,
+      "coherence_cv": 0.3207,
+      "top_words": [
+        {
+          "word": "phone addiction",
+          "score": 0.397
+        },
+        {
+          "word": "addicted phone",
+          "score": 0.33669
+        },
+        {
+          "word": "smartphone",
+          "score": 0.25755
+        },
+        {
+          "word": "phones",
+          "score": 0.25425
+        },
+        {
+          "word": "flip",
+          "score": 0.25158
+        },
+        {
+          "word": "without phone",
+          "score": 0.24401
+        },
+        {
+          "word": "flip phone",
+          "score": 0.24137
+        },
+        {
+          "word": "deleting apps",
+          "score": 0.23251
+        },
+        {
+          "word": "notifications",
+          "score": 0.22905
+        },
+        {
+          "word": "mobile",
+          "score": 0.22783
+        }
+      ]
+    },
+    {
+      "topic_id": 1,
+      "size": 212,
+      "coherence_cv": 0.2967,
+      "top_words": [
+        {
+          "word": "cleaning",
+          "score": 0.25315
+        },
+        {
+          "word": "lazy",
+          "score": 0.22237
+        },
+        {
+          "word": "dressed",
+          "score": 0.21273
+        },
+        {
+          "word": "rewards",
+          "score": 0.21273
+        },
+        {
+          "word": "motivated",
+          "score": 0.21108
+        },
+        {
+          "word": "boss",
+          "score": 0.20629
+        },
+        {
+          "word": "assignment",
+          "score": 0.20258
+        },
+        {
+          "word": "dysfunction",
+          "score": 0.19505
+        },
+        {
+          "word": "study",
+          "score": 0.19224
+        },
+        {
+          "word": "procrastinating",
+          "score": 0.1919
+        }
+      ]
+    },
+    {
+      "topic_id": 2,
+      "size": 85,
+      "coherence_cv": 0.347,
+      "top_words": [
+        {
+          "word": "comments",
+          "score": 0.41534
+        },
+        {
+          "word": "ocd",
+          "score": 0.37799
+        },
+        {
+          "word": "female friend",
+          "score": 0.31274
+        },
+        {
+          "word": "far worse",
+          "score": 0.30682
+        },
+        {
+          "word": "hate comments",
+          "score": 0.30682
+        },
+        {
+          "word": "female",
+          "score": 0.30034
+        },
+        {
+          "word": "talked",
+          "score": 0.29285
+        },
+        {
+          "word": "laughing",
+          "score": 0.28206
+        },
+        {
+          "word": "apologize",
+          "score": 0.27615
+        },
+        {
+          "word": "toxic",
+          "score": 0.26988
+        }
+      ]
+    },
+    {
+      "topic_id": 3,
+      "size": 224,
+      "coherence_cv": 0.7423,
+      "top_words": [
+        {
+          "word": "panic",
+          "score": 0.39243
+        },
+        {
+          "word": "nervous",
+          "score": 0.3535
+        },
+        {
+          "word": "attack",
+          "score": 0.34613
+        },
+        {
+          "word": "nervous system",
+          "score": 0.34423
+        },
+        {
+          "word": "system",
+          "score": 0.34202
+        },
+        {
+          "word": "attacks",
+          "score": 0.31824
+        },
+        {
+          "word": "panic attack",
+          "score": 0.3174
+        },
+        {
+          "word": "panic attacks",
+          "score": 0.30128
+        },
+        {
+          "word": "stress",
+          "score": 0.29484
+        },
+        {
+          "word": "heart",
+          "score": 0.29189
+        }
+      ]
+    },
+    {
+      "topic_id": 4,
+      "size": 113,
+      "coherence_cv": 0.2163,
+      "top_words": [
+        {
+          "word": "media addiction",
+          "score": 0.36766
+        },
+        {
+          "word": "quit",
+          "score": 0.3441
+        },
+        {
+          "word": "limit",
+          "score": 0.33305
+        },
+        {
+          "word": "uninstalled",
+          "score": 0.32711
+        },
+        {
+          "word": "posts",
+          "score": 0.305
+        },
+        {
+          "word": "insta",
+          "score": 0.30093
+        },
+        {
+          "word": "accounts",
+          "score": 0.29788
+        },
+        {
+          "word": "uninstall",
+          "score": 0.28634
+        },
+        {
+          "word": "quit social",
+          "score": 0.27572
+        },
+        {
+          "word": "addicted social",
+          "score": 0.27564
+        }
+      ]
+    },
+    {
+      "topic_id": 5,
+      "size": 213,
+      "coherence_cv": 0.1688,
+      "top_words": [
+        {
+          "word": "hyperfixation",
+          "score": 0.27018
+        },
+        {
+          "word": "symptoms",
+          "score": 0.26755
+        },
+        {
+          "word": "study",
+          "score": 0.24377
+        },
+        {
+          "word": "song",
+          "score": 0.23314
+        },
+        {
+          "word": "talk",
+          "score": 0.20989
+        },
+        {
+          "word": "adhd not",
+          "score": 0.20577
+        },
+        {
+          "word": "diagnosed adhd",
+          "score": 0.20474
+        },
+        {
+          "word": "concentrate",
+          "score": 0.20187
+        },
+        {
+          "word": "learning",
+          "score": 0.20138
+        },
+        {
+          "word": "hyperfixations",
+          "score": 0.20106
+        }
+      ]
+    },
+    {
+      "topic_id": 6,
+      "size": 109,
+      "coherence_cv": 0.2228,
+      "top_words": [
+        {
+          "word": "hobby",
+          "score": 0.39732
+        },
+        {
+          "word": "boredom",
+          "score": 0.33758
+        },
+        {
+          "word": "interest",
+          "score": 0.28678
+        },
+        {
+          "word": "puzzles",
+          "score": 0.25873
+        },
+        {
+          "word": "ideas",
+          "score": 0.2523
+        },
+        {
+          "word": "draw",
+          "score": 0.24525
+        },
+        {
+          "word": "entertaining",
+          "score": 0.24493
+        },
+        {
+          "word": "painting",
+          "score": 0.24266
+        },
+        {
+          "word": "thoughts started",
+          "score": 0.24257
+        },
+        {
+          "word": "interests",
+          "score": 0.2414
+        }
+      ]
+    },
+    {
+      "topic_id": 7,
+      "size": 158,
+      "coherence_cv": 0.582,
+      "top_words": [
+        {
+          "word": "porn",
+          "score": 0.40332
+        },
+        {
+          "word": "weed",
+          "score": 0.31348
+        },
+        {
+          "word": "alcohol",
+          "score": 0.2988
+        },
+        {
+          "word": "drugs",
+          "score": 0.29629
+        },
+        {
+          "word": "sober",
+          "score": 0.29396
+        },
+        {
+          "word": "addictions",
+          "score": 0.28555
+        },
+        {
+          "word": "smoking",
+          "score": 0.25365
+        },
+        {
+          "word": "addict",
+          "score": 0.24853
+        },
+        {
+          "word": "girls",
+          "score": 0.23927
+        },
+        {
+          "word": "food",
+          "score": 0.23827
+        }
+      ]
+    },
+    {
+      "topic_id": 8,
+      "size": 178,
+      "coherence_cv": 0.541,
+      "top_words": [
+        {
+          "word": "class",
+          "score": 0.24678
+        },
+        {
+          "word": "study",
+          "score": 0.22285
+        },
+        {
+          "word": "semester",
+          "score": 0.2168
+        },
+        {
+          "word": "classes",
+          "score": 0.21673
+        },
+        {
+          "word": "lazy",
+          "score": 0.21324
+        },
+        {
+          "word": "grades",
+          "score": 0.20613
+        },
+        {
+          "word": "depression",
+          "score": 0.20095
+        },
+        {
+          "word": "psychiatrist",
+          "score": 0.1975
+        },
+        {
+          "word": "parents",
+          "score": 0.19211
+        },
+        {
+          "word": "future",
+          "score": 0.1915
+        }
+      ]
+    },
+    {
+      "topic_id": 9,
+      "size": 122,
+      "coherence_cv": 0.4906,
+      "top_words": [
+        {
+          "word": "adderall",
+          "score": 0.45738
+        },
+        {
+          "word": "vyvanse",
+          "score": 0.37572
+        },
+        {
+          "word": "dose",
+          "score": 0.3669
+        },
+        {
+          "word": "prescribed",
+          "score": 0.3366
+        },
+        {
+          "word": "ritalin",
+          "score": 0.31623
+        },
+        {
+          "word": "medicine",
+          "score": 0.29611
+        },
+        {
+          "word": "doctor",
+          "score": 0.287
+        },
+        {
+          "word": "strattera",
+          "score": 0.28528
+        },
+        {
+          "word": "concerta",
+          "score": 0.28399
+        },
+        {
+          "word": "crash",
+          "score": 0.2646
+        }
+      ]
+    },
+    {
+      "topic_id": 10,
+      "size": 173,
+      "coherence_cv": 0.6205,
+      "top_words": [
+        {
+          "word": "timer",
+          "score": 0.30993
+        },
+        {
+          "word": "stop doom",
+          "score": 0.30982
+        },
+        {
+          "word": "limits",
+          "score": 0.29765
+        },
+        {
+          "word": "timers",
+          "score": 0.27541
+        },
+        {
+          "word": "limit",
+          "score": 0.27529
+        },
+        {
+          "word": "lock",
+          "score": 0.26826
+        },
+        {
+          "word": "android",
+          "score": 0.26684
+        },
+        {
+          "word": "disable",
+          "score": 0.26459
+        },
+        {
+          "word": "settings",
+          "score": 0.26039
+        },
+        {
+          "word": "stop doomscrolling",
+          "score": 0.25779
+        }
+      ]
+    },
+    {
+      "topic_id": 11,
+      "size": 170,
+      "coherence_cv": 0.3965,
+      "top_words": [
+        {
+          "word": "speed",
+          "score": 0.26979
+        },
+        {
+          "word": "movies",
+          "score": 0.2569
+        },
+        {
+          "word": "ads",
+          "score": 0.24473
+        },
+        {
+          "word": "usage",
+          "score": 0.24268
+        },
+        {
+          "word": "short form",
+          "score": 0.23339
+        },
+        {
+          "word": "audio",
+          "score": 0.21907
+        },
+        {
+          "word": "format",
+          "score": 0.21633
+        },
+        {
+          "word": "subway",
+          "score": 0.20668
+        },
+        {
+          "word": "adhd brain",
+          "score": 0.20592
+        },
+        {
+          "word": "feature",
+          "score": 0.20592
+        }
+      ]
+    },
+    {
+      "topic_id": 12,
+      "size": 62,
+      "coherence_cv": 0.3548,
+      "top_words": [
+        {
+          "word": "awake",
+          "score": 0.43168
+        },
+        {
+          "word": "alarm",
+          "score": 0.43035
+        },
+        {
+          "word": "bedtime",
+          "score": 0.41105
+        },
+        {
+          "word": "lights",
+          "score": 0.38996
+        },
+        {
+          "word": "getting bed",
+          "score": 0.37603
+        },
+        {
+          "word": "falling asleep",
+          "score": 0.37146
+        },
+        {
+          "word": "alarm goes",
+          "score": 0.36456
+        },
+        {
+          "word": "sleep schedule",
+          "score": 0.35965
+        },
+        {
+          "word": "hours sleep",
+          "score": 0.35965
+        },
+        {
+          "word": "podcast",
+          "score": 0.34891
+        }
+      ]
+    }
+  ]
+}
