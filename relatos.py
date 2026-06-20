@@ -1,6 +1,7 @@
 import json
 import os
-from openai import OpenAI
+import traceback
+from openai import OpenAI, APIError, APIConnectionError, RateLimitError, AuthenticationError
 
 # ==========================================
 # CONFIGURAÇÕES
@@ -10,12 +11,9 @@ OUTPUT_FILE = "classificacoes.jsonl"
 BATCH_SIZE = 20
 MODEL = "gpt-4o-mini"
 
-# Inicializa o cliente da OpenAI 
-# (Ele buscará automaticamente a variável de ambiente OPENAI_API_KEY)
+# Inicializa o cliente da OpenAI
 client = OpenAI()
 
-# Adaptei ligeiramente seu prompt para que ele processe uma lista de posts 
-# e retorne um objeto JSON contendo um array (exigência do json_object da OpenAI)
 SYSTEM_PROMPT = """
 You are an expert annotator studying short-form video consumption.
 
@@ -60,7 +58,6 @@ Schema for each object in the "results" list:
 """
 
 def carregar_ids_processados(caminho_arquivo):
-    """Lê o arquivo de saída para identificar os post_ids que já foram classificados."""
     ids_processados = set()
     if os.path.exists(caminho_arquivo):
         with open(caminho_arquivo, 'r', encoding='utf-8') as f:
@@ -76,7 +73,6 @@ def carregar_ids_processados(caminho_arquivo):
     return ids_processados
 
 def carregar_posts_pendentes(caminho_arquivo, ids_processados):
-    """Lê o input e retorna apenas os posts que ainda não foram processados."""
     posts_pendentes = []
     if not os.path.exists(caminho_arquivo):
         print(f"Arquivo {caminho_arquivo} não encontrado.")
@@ -95,29 +91,37 @@ def carregar_posts_pendentes(caminho_arquivo, ids_processados):
     return posts_pendentes
 
 def criar_lotes(lista, tamanho_lote):
-    """Gerador que divide a lista em lotes do tamanho especificado."""
     for i in range(0, len(lista), tamanho_lote):
         yield lista[i:i + tamanho_lote]
+
+def exibir_barra_progresso(atual, total, tamanho_barra=40):
+    """Exibe uma barra de progresso visual no terminal."""
+    progresso = atual / total
+    preenchido = int(tamanho_barra * progresso)
+    barra = '█' * preenchido + '-' * (tamanho_barra - preenchido)
+    porcentagem = progresso * 100
+    print(f"Progresso da Sessão: |{barra}| {atual}/{total} ({porcentagem:.1f}%)")
+    print("-" * 50)
 
 def processar_dados():
     ids_processados = carregar_ids_processados(OUTPUT_FILE)
     posts_pendentes = carregar_posts_pendentes(INPUT_FILE, ids_processados)
 
-    print(f"Resumo:")
-    print(f"- Posts já classificados: {len(ids_processados)}")
-    print(f"- Posts aguardando processamento: {len(posts_pendentes)}")
-    print("-" * 30)
+    total_pendentes = len(posts_pendentes)
+    processados_agora = 0
+
+    print(f"\nResumo Inicial:")
+    print(f"- Posts já classificados anteriormente: {len(ids_processados)}")
+    print(f"- Posts aguardando processamento agora: {total_pendentes}")
+    print("=" * 50)
 
     if not posts_pendentes:
         print("Nenhum novo post para classificar. Encerrando.")
         return
 
-    # Abre o arquivo de saída no modo "append" (adicionar ao final)
     with open(OUTPUT_FILE, 'a', encoding='utf-8') as out_file:
         for lote in criar_lotes(posts_pendentes, BATCH_SIZE):
             
-            # Filtramos os campos que enviamos à LLM para economizar tokens
-            # Não há necessidade de enviar URL, data, número de comentários, etc.
             lote_para_llm = [
                 {
                     "post_id": p["post_id"],
@@ -127,15 +131,13 @@ def processar_dados():
                 for p in lote
             ]
             
-            print(f"Enviando lote com {len(lote_para_llm)} posts para {MODEL}...")
-            print(f"- Posts já classificados: {len(ids_processados)}")
-            print(f"- Posts aguardando processamento: {len(posts_pendentes)}")
+            print(f"Enviando lote de {len(lote_para_llm)} posts para a API...")
             
             try:
                 resposta = client.chat.completions.create(
                     model=MODEL,
                     response_format={"type": "json_object"},
-                    temperature=0.0, # Temperatura 0 para garantir consistência na anotação
+                    temperature=0.0, 
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": json.dumps({"posts": lote_para_llm})}
@@ -144,21 +146,41 @@ def processar_dados():
                 
                 conteudo_resposta = resposta.choices[0].message.content
                 dados_json = json.loads(conteudo_resposta)
-                
-                # O json retornado deve ter a chave "results" devido ao prompt ajustado
                 resultados = dados_json.get("results", [])
                 
                 for res in resultados:
-                    # Escreve imediatamente no disco. Se o script cair, o que foi salvo não se perde.
                     out_file.write(json.dumps(res) + '\n')
-                    # Atualiza o buffer do arquivo
-                    out_file.flush()
+                out_file.flush()
                 
-                print("Lote salvo com sucesso.")
+                # Atualiza os contadores e exibe a barra de progresso
+                processados_agora += len(lote)
+                exibir_barra_progresso(processados_agora, total_pendentes)
                 
+            except APIConnectionError as e:
+                print("\n[ERRO DE CONEXÃO] Falha na comunicação com a rede ou servidores da OpenAI.")
+                print(f"Detalhes: {e}")
+                break
+            except RateLimitError as e:
+                print("\n[ERRO DE RATE LIMIT] Limite de requisições excedido ou cota da API esgotada.")
+                print(f"Detalhes: {e}")
+                break
+            except AuthenticationError as e:
+                print("\n[ERRO DE AUTENTICAÇÃO] A API Key fornecida é inválida ou não tem permissões suficientes.")
+                print(f"Detalhes: {e}")
+                break
+            except APIError as e:
+                print(f"\n[ERRO NA API] A OpenAI retornou um erro genérico do lado do servidor (Status HTTP: {e.status_code}).")
+                print(f"Detalhes: {e.message}")
+                break
+            except json.JSONDecodeError as e:
+                print("\n[ERRO DE PARSING JSON] A LLM não retornou um JSON estruturado de forma válida.")
+                print(f"Detalhes: {e}")
+                print(f"Conteúdo bruto recebido:\n{conteudo_resposta}")
+                break
             except Exception as e:
-                print(f"Erro ao processar o lote: {e}")
-                print("Interrompendo a execução. Corrija o erro e rode o script novamente para continuar de onde parou.")
+                print("\n[ERRO DESCONHECIDO] Ocorreu uma exceção não catalogada no sistema.")
+                print("Stacktrace completo:")
+                traceback.print_exc()
                 break
 
 if __name__ == "__main__":
