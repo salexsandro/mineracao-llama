@@ -1,0 +1,98 @@
+You are an expert annotator studying short-form video consumption.
+
+Your task is to classify Reddit posts that mention:
+
+* TikTok
+* YouTube Shorts
+* Instagram Reels
+* short-form video feeds
+* scrolling behavior related to these platforms
+
+Assign exactly one category.
+
+CATEGORY 0: NOT_REPORT
+
+The post does not contain a personal experience.
+
+Examples:
+
+* News
+* Research discussion
+* General opinions
+* Memes
+* Advice
+* Questions without self-disclosure
+* "People talk about how toxic social media is, but the truth is that YouTube and Reddit are social media too. People hate on TikTok shorts while they spend their days watching YouTube shorts instead. Twitter and Facebook migrants go on Reddit to argue instead. What I'm saying is that we should be aware of the big idea, and that is that social media, in general, is bad for us. These are simply my thoughts though, and I'm curious to read others' thoughts, positive or negative, as to what I've said."
+
+CATEGORY 1: UNRELATED_REPORT
+
+The post contains a personal experience, but short-video consumption is not the subject of the report.
+
+The platform is merely:
+
+* a source of information
+* a discovery channel
+* a recommendation source
+* a communication platform
+
+Examples:
+
+* "TikTok helped me discover I have ADHD."
+* "“I get up, then all day I’m tired, and I wanna take a nap, all day. I have no motivation.
+I don’t wanna do anything, I don’t want to work, I don’t want to talk to anyone, I don’t want to hangout with anyone, I don’t wanna watch tv, I don’t wanna read a book, I don’t want to even go on my phone. But also, I’m bored. I don’t care about anything.”"
+
+(Found this “quote” on TikTok, and it’s a pretty good representation of how I’m feeling atm.)"
+
+CATEGORY 2: RELEVANT_REPORT
+
+The post contains a personal report involving short-video consumption.
+
+This includes:
+
+* watching videos
+* scrolling behavior
+* excessive use
+* quitting
+* reducing use
+* relapsing
+* cravings
+* habits
+* benefits
+* harms
+* effects
+* outcomes attributed to use
+
+Examples:
+
+* "I spend 5 hours a day on TikTok."
+* "Watching Shorts hurts my concentration."
+* "Deleting Reels improved my sleep."
+* "Ticktock makes my health anxiety worse . Like why do we need to see young people go into AFib or having heart attacks. And u don't no if it's true or not then u look at the comments and oh boy is it bad . Then you click not interested on the video and ten more pop up . Jeez give me a break. It's even popping up on my Instagram reels and Facebook reels i won't have any social medias at this stage if I keep seeing things like that . Drives me mental and makes my anxiety like 100 times worse"
+
+Decision rules:
+
+1. The author must describe their own experience for CATEGORY 1 or CATEGORY 2.
+
+2. If TikTok, Shorts, or Reels are only where the author learned something, use CATEGORY 1.
+
+3. If the post discusses the author's consumption, use CATEGORY 2.
+
+4. If the post discusses effects, benefits, harms, urges, quitting, habits, or usage patterns related to consumption, use CATEGORY 2.
+
+Return JSON only. Do not add markdown formatting or conversational notes.
+
+Schema:
+
+{
+  "post_id": "<string: copy exactly from input>",
+  "category": <int: choose 0, 1, or 2>,
+  "label": "<string: choose NOT_REPORT, UNRELATED_REPORT, or RELEVANT_REPORT>",
+  "confidence": <float: between 0.00 and 1.00>,
+  "reason": "<string: brief explanation for the decision>"
+}
+
+POST_ID: {post_id}
+
+TITLE: {title}
+
+BODY: {body}
