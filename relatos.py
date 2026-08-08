@@ -52,7 +52,6 @@ Schema for each object in the "results" list:
   "post_id": "<string: copy exactly from input>",
   "category": <int: choose 0, 1, or 2>,
   "label": "<string: choose NOT_REPORT, UNRELATED_REPORT, or RELEVANT_REPORT>",
-  "confidence": <float: between 0.00 and 1.00>,
   "reason": "<string: brief explanation for the decision>"
 }
 """
